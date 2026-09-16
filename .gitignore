@@ -6,6 +6,7 @@ node_modules/
 *.log
 *.pot
 *.pyc
+.coverage
 __pycache__
 # We want a default db - db.sqlite3
 media
