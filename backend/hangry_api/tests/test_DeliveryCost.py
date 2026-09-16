@@ -28,8 +28,14 @@ def test_MiddleOfTheRoadItems():
 def test_LittleItems():
   #Arrange
   # TODO: Arrange the items to run the test
+  order = MockSet()
+  order.add(MockModel(quantity=3))
+  order.add(MockModel(quantity=1))
+  del_dist = 2
+
   #Act
-  # TODO: Call the function that will be tested
+  cost = Delivery.calculate(order, del_dist)
+
   #Assert
   # TODO: replace the pass with an assert to test the value returned.
-  pass
+  assert cost == 2.5
