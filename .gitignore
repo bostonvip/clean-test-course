@@ -23,3 +23,5 @@ env.bak/
 venv.bak/ 
 
 test*.sh
+backend/.coverage
+backend/hangry_api/.coverage

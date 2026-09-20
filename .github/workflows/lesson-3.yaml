@@ -5,14 +5,25 @@ on:
     branches:
       - lesson-3
 jobs:
-  deploy:
+  function_test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v7.0.1
-#      - run: npm install && npm run build (commented out to save learner time)
+      - run: npm install
+      - name: Run functional tests
+        run: npm test -- --coverage --watchAll=false  
+  deploy:
+    needs: [function_test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: npm install && npm run build (commented out to save learner time)
       - name: Generate deployment package
         run: zip -r deploy.zip build Dockerfile
       - name: '**PLACEHOLDER** Deploy to Elastic Beanstalk'
