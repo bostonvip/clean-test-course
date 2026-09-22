@@ -1,41 +1,41 @@
+from types import SimpleNamespace
+
+import pytest
+
 from api.controllers import Delivery
-from django_mock_queries.query import MockSet, MockModel
 
-def test_LotsOfItems():
-  #Arrange
-  order = MockSet()
-  order.add(MockModel(quantity=5))
-  order.add(MockModel(quantity=5))
-  order.add(MockModel(quantity=5))
-  delivery_distance = 6
-  #Act
-  cost = Delivery.calculate(order,delivery_distance)
-  #Assert
-  assert cost == 7.5
 
-def test_MiddleOfTheRoadItems():
-  #Arrange
-  order = MockSet()
-  order.add(MockModel(quantity=2))
-  order.add(MockModel(quantity=2))
-  order.add(MockModel(quantity=2))
-  delivery_distance = 4
-  #Act
-  cost = Delivery.calculate(order,delivery_distance)
-  #Assert
-  assert cost == 5
+def make_order(*quantities):
+    """Create order items with only the attribute Delivery needs."""
+    return [SimpleNamespace(quantity=quantity) for quantity in quantities]
 
-def test_LittleItems():
-  #Arrange
-  # TODO: Arrange the items to run the test
-  order = MockSet()
-  order.add(MockModel(quantity=3))
-  order.add(MockModel(quantity=1))
-  del_dist = 2
 
-  #Act
-  cost = Delivery.calculate(order, del_dist)
+@pytest.mark.parametrize(
+    ("quantities", "distance", "expected_cost"),
+    [
+        pytest.param((), 10, 3.5, id="empty-order"),
+        pytest.param((3, 1), 2, 3.5, id="small-order"),
+        pytest.param((3, 3), 4, 5, id="medium-order"),
+        pytest.param((5, 6), 6, 7.5, id="large-order"),
+        pytest.param((0,), 6, 3.5, id="zero-quantity"),
+        pytest.param((5, 6), 0, 3.5, id="zero-distance"),
+        pytest.param((5,), 6, 3.5, id="long-distance-small-order"),
+        pytest.param((5, 6), 3, 3.5, id="large-order-short-distance"),
+        pytest.param((5,), 4, 3.5, id="medium-quantity-boundary"),
+        pytest.param((3, 3), 3, 3.5, id="medium-distance-boundary"),
+        pytest.param((4, 6), 6, 5, id="large-quantity-boundary"),
+        pytest.param((5, 6), 5, 5, id="large-distance-boundary"),
+    ],
+)
+def test_calculate_returns_expected_delivery_cost(
+    quantities, distance, expected_cost
+):
+    order = make_order(*quantities)
 
-  #Assert
-  # TODO: replace the pass with an assert to test the value returned.
-  assert cost == 2.5
+    assert Delivery.calculate(order, distance) == expected_cost
+
+
+def test_calculate_uses_the_sum_of_item_quantities():
+    order = make_order(2, 2, 2)
+
+    assert Delivery.calculate(order, 4) == 5
