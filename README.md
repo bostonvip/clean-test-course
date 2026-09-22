@@ -126,60 +126,42 @@ The front end was originally created using [Create React App](https://create-rea
 
 ## Running Back End Unit Tests
 
-1.  Install the test dependencies.
+1.  From the repository root, create a Python 3.13 virtual environment and install the test dependencies. On Windows (PowerShell):
 
-        pip install pytest django_mock_queries six coverage
+        py -3.13 -m venv --clear .venv
+        .\.venv\Scripts\python.exe -m pip install pytest django_mock_queries six coverage
 
-2.  Run the tests.
+    On macOS or Linux:
 
-        coverage run -m --source=./hangry_api pytest
+        python3.13 -m venv --clear .venv
+        ./.venv/bin/python -m pip install pytest django_mock_queries six coverage
+
+2.  Run the tests from `backend/hangry_api`. On Windows (PowerShell):
+
+        cd backend/hangry_api
+        ..\..\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests -q
+
+    On macOS or Linux:
+
+        cd backend/hangry_api
+        ../../.venv/bin/python -m pytest -p no:cacheprovider tests -q
 
     > **Note:** The server should not be running when you run tests.
 
 3.  As a result, you should see something like
 
-        ================= test session starts ===================
-        platform linux -- Python 3.8.13, pytest-7.1.2, pluggy-1.0.0
-        rootdir: ./quantic-test-course/backend/hangry_api
-        collected 5 items
+        ................                                                         [100%]
+        16 passed
 
-        tests/test_DeliveryCost.py ...                     [ 50%]
-        tests/test_SubtotalCost.py ..                      [ 83%]
-        tests/test_Tax.py ...........                      [100%]
-        ================= 5 passed in 0.16s =====================
+4.  [Optional] From `backend/hangry_api`, run the tests with coverage and print the report. On Windows (PowerShell):
 
-4.  [Optional] Generate a coverage report:
+        ..\..\.venv\Scripts\python.exe -m coverage run --source=api -m pytest -p no:cacheprovider tests -q
+        ..\..\.venv\Scripts\python.exe -m coverage report
 
-        coverage report
+    On macOS or Linux:
 
-    Example Report:
-
-        Name                                                     Stmts   Miss  Cover
-        ----------------------------------------------------------------------------
-        hangry_api/api/__init__.py                                   0      0   100%
-        hangry_api/api/admin.py                                      5      5     0%
-        hangry_api/api/apps.py                                       4      4     0%
-        hangry_api/api/controllers.py                               23      2    91%
-        hangry_api/api/migrations/0001_initial.py                    5      5     0%
-        hangry_api/api/migrations/0002_food_category_alter_food_p... 5      5     0%
-        hangry_api/api/migrations/__init__.py                        0      0   100%
-        hangry_api/api/models.py                                    17     17     0%
-        hangry_api/api/serializers.py                               23     23     0%
-        hangry_api/api/tests.py                                      1      1     0%
-        hangry_api/api/urls.py                                       3      3     0%
-        hangry_api/api/views.py                                     84     84     0%
-        hangry_api/hangry_api/__init__.py                            0      0   100%
-        hangry_api/hangry_api/asgi.py                                4      4     0%
-        hangry_api/hangry_api/settings.py                           19     19     0%
-        hangry_api/hangry_api/urls.py                                3      3     0%
-        hangry_api/hangry_api/wsgi.py                                4      4     0%
-        hangry_api/manage.py                                        12     12     0%
-        hangry_api/tests/__init__.py                                 0      0   100%
-        hangry_api/tests/test_DeliveryCost.py                       22      0   100%
-        hangry_api/tests/test_SubtotalCost.py                       15      0   100%
-        hangry_api/tests/test_Tax.py                                 7      0   100%
-        ----------------------------------------------------------------------------
-        TOTAL                                                      254    191    25%
+        ../../.venv/bin/python -m coverage run --source=api -m pytest -p no:cacheprovider tests -q
+        ../../.venv/bin/python -m coverage report
 
 ## Running the Front End
 
